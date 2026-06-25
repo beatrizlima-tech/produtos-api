@@ -1,48 +1,61 @@
 # 📦 Produtos API
 
-API REST desenvolvida com Java e Spring Boot para gerenciamento de produtos, utilizando JDBC para comunicação com banco de dados PostgreSQL e Swagger/OpenAPI para documentação.
-
-O projeto aplica conceitos de backend, integração com banco de dados, DTOs, arquitetura em camadas e criação de endpoints REST.
-
----
-
-## 🚀 Tecnologias Utilizadas
-
-* Java
-* Spring Boot
-* JDBC
-* PostgreSQL
-* Swagger / OpenAPI
-* Maven
-* Lombok
+![Java](https://img.shields.io/badge/Java-21-red?style=for-the-badge\&logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.x-green?style=for-the-badge\&logo=springboot)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue?style=for-the-badge\&logo=postgresql)
+![JDBC](https://img.shields.io/badge/JDBC-Database-orange?style=for-the-badge)
+![Swagger](https://img.shields.io/badge/Swagger-OpenAPI-85EA2D?style=for-the-badge\&logo=swagger)
+![License](https://img.shields.io/badge/license-MIT-lightgrey?style=for-the-badge)
 
 ---
 
-## ✨ Funcionalidades
+# 📌 Sobre o projeto
+
+A **Produtos API** é uma aplicação backend desenvolvida com **Java** e **Spring Boot** para gerenciamento de produtos, utilizando **JDBC** para comunicação direta com um banco de dados PostgreSQL.
+
+O projeto foi desenvolvido para praticar conceitos fundamentais de desenvolvimento de APIs REST, organização em camadas, persistência de dados utilizando SQL puro e integração com aplicações frontend.
+
+---
+
+# 🚀 Funcionalidades
 
 ### Implementadas
 
 * Cadastro de produtos
-* Listagem de produtos por nome
-* Cálculo do valor total em estoque
+* Consulta de produtos por nome
+* Cálculo automático do valor total em estoque
 * Integração com PostgreSQL
-* Documentação com Swagger
-* Configuração de CORS para integração com frontend Angular
+* Documentação da API com Swagger/OpenAPI
+* Configuração de CORS para integração com aplicações Angular
 
 ### Em desenvolvimento
 
 * Atualização de produtos
 * Exclusão de produtos
-* Melhorias no tratamento de erros
-* Validações de entrada
+* Validação de dados
 * Padronização das respostas HTTP
+* Tratamento global de exceções
 
 ---
 
-## 🏗️ Arquitetura do Projeto
+# 🧱 Tecnologias Utilizadas
+
+* Java 21
+* Spring Boot
+* Spring Web MVC
+* JDBC
+* PostgreSQL
+* Swagger / OpenAPI
+* Maven
+* REST API
+
+---
+
+# 🏗️ Estrutura do Projeto
 
 ```text
-src/
+src/main/java/br/com/cotiinformatica/produtos_api/
+
 ├── configurations
 ├── controllers
 ├── dtos
@@ -53,71 +66,56 @@ src/
 
 ---
 
-## 📌 Endpoints
+# 📊 Arquitetura
 
-| Método | Endpoint                        | Descrição                          |
-| ------ | ------------------------------- | ---------------------------------- |
-| POST   | `/api/v1/produtos/criar`        | Cadastra um novo produto           |
-| GET    | `/api/v1/produtos/listar?nome=` | Lista produtos filtrando pelo nome |
-| PUT    | `/api/v1/produtos/alterar`      | Em desenvolvimento                 |
-| DELETE | `/api/v1/produtos/excluir`      | Em desenvolvimento                 |
-
----
-
-## 🧠 Conceitos Aplicados
-
-* API REST
-* Programação Orientada a Objetos
-* DTOs com Records
-* Integração com PostgreSQL
-* JDBC
-* PreparedStatement
-* Consultas SQL
-* CORS
-* Swagger/OpenAPI
-* Separação de responsabilidades
-
----
-
-## 🗄️ Banco de Dados
-
-O projeto utiliza PostgreSQL.
-
-Exemplo de tabela utilizada:
-
-```sql
-CREATE TABLE produtos(
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(150) NOT NULL,
-    descricao TEXT NOT NULL,
-    preco DECIMAL(10,2) NOT NULL,
-    quantidade INTEGER NOT NULL,
-    data_cadastro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    data_atualizacao TIMESTAMP NULL,
-    data_exclusao TIMESTAMP NULL,
-    ativo INT NOT NULL DEFAULT 1
-);
+```text
+Cliente (Frontend)
+        │
+        ▼
+Controller
+        │
+        ▼
+Repository
+        │
+        ▼
+JDBC
+        │
+        ▼
+PostgreSQL
 ```
 
 ---
 
-## ▶️ Como Executar
+# 🔗 Endpoints da API
 
-### Pré-requisitos
+| Método | Endpoint                        | Descrição          |
+| ------ | ------------------------------- | ------------------ |
+| POST   | `/api/v1/produtos/criar`        | Cadastrar produto  |
+| GET    | `/api/v1/produtos/listar?nome=` | Consultar produtos |
+| PUT    | `/api/v1/produtos/alterar`      | Em desenvolvimento |
+| DELETE | `/api/v1/produtos/excluir`      | Em desenvolvimento |
 
-* Java 21+
-* Maven
-* PostgreSQL
+---
 
-### Clonar o projeto
+# ⚙️ Como Executar o Projeto
+
+## 1. Clonar o repositório
 
 ```bash
 git clone https://github.com/beatrizlima-tech/produtos-api.git
 ```
 
-### Configurar o banco
+---
 
-Configure os dados de conexão na classe `ConnectionFactory`:
+## 2. Criar o banco de dados
+
+Crie um banco PostgreSQL e execute o script disponível no projeto para criação da tabela **produtos**.
+
+---
+
+## 3. Configurar a conexão
+
+Na classe **ConnectionFactory**, configure os dados de acesso ao banco:
 
 ```java
 var host = "jdbc:postgresql://localhost:5434/bd_apiprodutos";
@@ -125,19 +123,17 @@ var user = "coti";
 var pass = "sua_senha";
 ```
 
-### Executar a aplicação
+---
+
+## 4. Executar a aplicação
 
 ```bash
 mvn spring-boot:run
 ```
 
-A API ficará disponível em:
+---
 
-```text
-http://localhost:8080
-```
-
-Swagger:
+## 5. Acessar a documentação
 
 ```text
 http://localhost:8080/swagger-ui/index.html
@@ -145,17 +141,49 @@ http://localhost:8080/swagger-ui/index.html
 
 ---
 
-## 📚 Objetivo
+# 🌐 Integração com Frontend
 
-Este projeto foi desenvolvido para praticar o desenvolvimento de APIs REST com Java e Spring Boot, utilizando JDBC, PostgreSQL, DTOs e documentação com Swagger.
+Esta API é consumida pelo projeto **Web Produtos**, desenvolvido em Angular.
 
-Também faz parte da evolução dos estudos em backend e integração com aplicações frontend Angular.
+Frontend:
+
+https://github.com/beatrizlima-tech/web-produtos
 
 ---
 
-## 👩‍💻 Autora
+# 📚 Conceitos Aplicados
 
-**Beatriz Lima de Oliveira**
+* Programação Orientada a Objetos (POO)
+* Arquitetura em camadas
+* API REST
+* DTOs
+* JDBC
+* SQL
+* PreparedStatement
+* Repository Pattern
+* Integração com PostgreSQL
+* Configuração de CORS
+* Documentação com Swagger/OpenAPI
 
-GitHub:
+---
+
+# 📌 Melhorias Futuras
+
+* Implementar atualização de produtos
+* Implementar exclusão lógica
+* Adicionar Bean Validation
+* Criar tratamento global de exceções
+* Migrar JDBC para Spring Data JPA
+* Criar testes automatizados
+
+---
+
+# 👩‍💻 Autora
+
+Desenvolvido por **Beatriz Lima**
+
+🔗 GitHub
 https://github.com/beatrizlima-tech
+
+💼 LinkedIn
+https://www.linkedin.com/in/beatrizlima-tech
