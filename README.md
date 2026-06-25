@@ -13,28 +13,23 @@
 
 A **Produtos API** é uma aplicação backend desenvolvida com **Java** e **Spring Boot** para gerenciamento de produtos, utilizando **JDBC** para comunicação direta com um banco de dados PostgreSQL.
 
+A API permite cadastrar, consultar, atualizar e excluir produtos de forma lógica, mantendo o histórico de exclusão por meio dos campos `ativo` e `data_exclusao`.
+
 O projeto foi desenvolvido para praticar conceitos fundamentais de desenvolvimento de APIs REST, organização em camadas, persistência de dados utilizando SQL puro e integração com aplicações frontend.
 
 ---
 
 # 🚀 Funcionalidades
 
-### Implementadas
-
 * Cadastro de produtos
 * Consulta de produtos por nome
+* Consulta de produto por ID
+* Atualização de produtos
+* Exclusão lógica de produtos
 * Cálculo automático do valor total em estoque
 * Integração com PostgreSQL
 * Documentação da API com Swagger/OpenAPI
-* Configuração de CORS para integração com aplicações Angular
-
-### Em desenvolvimento
-
-* Atualização de produtos
-* Exclusão de produtos
-* Validação de dados
-* Padronização das respostas HTTP
-* Tratamento global de exceções
+* Configuração de CORS para integração com Angular
 
 ---
 
@@ -57,11 +52,24 @@ O projeto foi desenvolvido para praticar conceitos fundamentais de desenvolvimen
 src/main/java/br/com/cotiinformatica/produtos_api/
 
 ├── configurations
+│   ├── CorsConfiguration.java
+│   └── SwaggerConfiguration.java
+│
 ├── controllers
+│   └── ProdutoController.java
+│
 ├── dtos
+│   ├── ProdutoRequestDto.java
+│   └── ProdutoResponseDto.java
+│
 ├── entities
+│   └── Produto.java
+│
 ├── factories
+│   └── ConnectionFactory.java
+│
 └── repositories
+    └── ProdutoRepository.java
 ```
 
 ---
@@ -69,10 +77,13 @@ src/main/java/br/com/cotiinformatica/produtos_api/
 # 📊 Arquitetura
 
 ```text
-Cliente (Frontend)
+Cliente Frontend
         │
         ▼
 Controller
+        │
+        ▼
+DTOs
         │
         ▼
 Repository
@@ -88,12 +99,35 @@ PostgreSQL
 
 # 🔗 Endpoints da API
 
-| Método | Endpoint                        | Descrição          |
-| ------ | ------------------------------- | ------------------ |
-| POST   | `/api/v1/produtos/criar`        | Cadastrar produto  |
-| GET    | `/api/v1/produtos/listar?nome=` | Consultar produtos |
-| PUT    | `/api/v1/produtos/alterar`      | Em desenvolvimento |
-| DELETE | `/api/v1/produtos/excluir`      | Em desenvolvimento |
+| Método | Endpoint                              | Descrição                   |
+| ------ | ------------------------------------- | --------------------------- |
+| POST   | `/api/v1/produtos/criar`              | Cadastra um novo produto    |
+| GET    | `/api/v1/produtos/listar?nome={nome}` | Consulta produtos pelo nome |
+| GET    | `/api/v1/produtos/obter/{id}`         | Consulta produto por ID     |
+| PUT    | `/api/v1/produtos/alterar/{id}`       | Atualiza um produto         |
+| DELETE | `/api/v1/produtos/excluir/{id}`       | Exclui um produto           |
+
+---
+
+# 🗄️ Banco de Dados
+
+A tabela utilizada no projeto é `produtos`.
+
+```sql
+create table produtos(
+    id serial primary key,
+    nome varchar(150) not null,
+    descricao text not null,
+    preco decimal(10,2) not null,
+    quantidade integer not null,
+    data_cadastro timestamp not null default current_timestamp,
+    data_atualizacao timestamp null,
+    data_exclusao timestamp null,
+    ativo int not null default 1
+);
+```
+
+A exclusão dos produtos é feita de forma lógica, alterando o campo `ativo` para `0`.
 
 ---
 
@@ -105,17 +139,27 @@ PostgreSQL
 git clone https://github.com/beatrizlima-tech/produtos-api.git
 ```
 
----
+## 2. Acessar a pasta do projeto
 
-## 2. Criar o banco de dados
+```bash
+cd produtos-api
+```
 
-Crie um banco PostgreSQL e execute o script disponível no projeto para criação da tabela **produtos**.
+## 3. Criar o banco de dados
 
----
+Crie um banco PostgreSQL com o nome:
 
-## 3. Configurar a conexão
+```text
+bd_apiprodutos
+```
 
-Na classe **ConnectionFactory**, configure os dados de acesso ao banco:
+## 4. Executar o script SQL
+
+Execute o script `schema.sql` para criar a tabela `produtos`.
+
+## 5. Configurar a conexão
+
+Na classe `ConnectionFactory`, configure os dados de acesso ao banco:
 
 ```java
 var host = "jdbc:postgresql://localhost:5434/bd_apiprodutos";
@@ -123,21 +167,19 @@ var user = "coti";
 var pass = "sua_senha";
 ```
 
----
-
-## 4. Executar a aplicação
+## 6. Executar a aplicação
 
 ```bash
 mvn spring-boot:run
 ```
 
----
-
-## 5. Acessar a documentação
+## 7. Acessar a documentação da API
 
 ```text
 http://localhost:8080/swagger-ui/index.html
 ```
+
+> Caso a aplicação esteja configurada em outra porta, ajuste a URL conforme o `application.properties`.
 
 ---
 
@@ -147,13 +189,21 @@ Esta API é consumida pelo projeto **Web Produtos**, desenvolvido em Angular.
 
 Frontend:
 
+```text
 https://github.com/beatrizlima-tech/web-produtos
+```
+
+A configuração de CORS permite requisições vindas de:
+
+```text
+http://localhost:4200
+```
 
 ---
 
 # 📚 Conceitos Aplicados
 
-* Programação Orientada a Objetos (POO)
+* Programação Orientada a Objetos
 * Arquitetura em camadas
 * API REST
 * DTOs
@@ -162,6 +212,7 @@ https://github.com/beatrizlima-tech/web-produtos
 * PreparedStatement
 * Repository Pattern
 * Integração com PostgreSQL
+* Exclusão lógica
 * Configuração de CORS
 * Documentação com Swagger/OpenAPI
 
@@ -169,12 +220,12 @@ https://github.com/beatrizlima-tech/web-produtos
 
 # 📌 Melhorias Futuras
 
-* Implementar atualização de produtos
-* Implementar exclusão lógica
-* Adicionar Bean Validation
+* Adicionar validação de campos com Bean Validation
 * Criar tratamento global de exceções
+* Padronizar respostas da API
 * Migrar JDBC para Spring Data JPA
 * Criar testes automatizados
+* Implementar paginação e filtros avançados
 
 ---
 
@@ -187,3 +238,4 @@ https://github.com/beatrizlima-tech
 
 💼 LinkedIn
 https://www.linkedin.com/in/beatrizlima-tech
+
